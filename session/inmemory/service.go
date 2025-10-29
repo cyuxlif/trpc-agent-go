@@ -671,7 +671,7 @@ func (s *SessionService) Close() error {
 
 // updateStoredSession updates the stored session with the given event.
 func (s *SessionService) updateStoredSession(sess *session.Session, e *event.Event) {
-	if e.Response != nil && !e.IsPartial && e.IsValidContent() {
+	if len(e.StateDelta) > 0 || (e.Response != nil && !e.IsPartial && e.IsValidContent()) {
 		sess.EventMu.Lock()
 		sess.Events = append(sess.Events, *e)
 		if s.opts.sessionEventLimit > 0 && len(sess.Events) > s.opts.sessionEventLimit {
